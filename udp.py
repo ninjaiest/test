@@ -2,6 +2,9 @@ import sys
 import random
 import time
 import socket
+import comm.getini as getini
+
+print getini.getini('./conf/conf.ini','main','oracleserver','10.16.7.189')
 
 ipaddr = '127.0.0.1'
 port = 12582
