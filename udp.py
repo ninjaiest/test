@@ -3,12 +3,11 @@ import random
 import time
 import socket
 import comm.getini as getini
+import OracleMonitor.Monitor as OM
 
-print getini.getini('./conf/conf.ini','main','oracleserver','10.16.7.189')
+ipaddr =  getini.getini('./conf/conf.ini','GetPasswd','ipaddres','localhost')
+port = int(getini.getini('./conf/conf.ini','GetPasswd','port','3389'))
 
-ipaddr = '127.0.0.1'
-port = 12582
-password = ''
 # use tcp mode
 '''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,9 +28,7 @@ password, addr_tuple = s.recvfrom(1024)
 s.sendto("recive password,program begin running!", addr_tuple)
 s.close()
 
-fp = open("neo.txt","a+")
-while True:
-	fp.writelines(password + "this is the random number:" + str(random.randrange(0,9)) + '\n' )
-	fp.flush()
-	time.sleep(3)
+dbpasswd = password
 
+dbmoni = OM.DBmonitor(dbpasswd)
+dbmoni.test()
