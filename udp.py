@@ -31,4 +31,4 @@ s.close()
 dbpasswd = password
 
 dbmoni = OM.DBmonitor(dbpasswd)
-dbmoni.test()
+print dbmoni.getstatus('cpu', 'key_cpu')
