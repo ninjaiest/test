@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import sys
 import random
 import time
@@ -22,13 +25,17 @@ s.close()
 '''
 
 #u use udp mode
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.bind((ipaddr, port))
-password, addr_tuple = s.recvfrom(1024)
-s.sendto("recive password,program begin running!", addr_tuple)
-s.close()
+#s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#s.bind((ipaddr, port))
+#password, addr_tuple = s.recvfrom(1024)
+#s.sendto("recive password,program begin running!", addr_tuple)
+#s.close()
 
-dbpasswd = password
+dbpasswd = '#EDC2wsx1qaz189'
 
 dbmoni = OM.DBmonitor(dbpasswd)
-print dbmoni.getstatus('cpu', 'key_cpu')
+# print dbmoni.getvalues('cpu', 'key_cpu')
+# print dbmoni.test()
+tbspace = dbmoni.getvalues('tablesspace', 'tbs_user_used')
+for i in tbspace:
+	print tbspace[i]
