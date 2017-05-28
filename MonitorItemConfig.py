@@ -4,6 +4,7 @@
 import os
 import sys
 import sqlite3
+import base64
 from tabulate import tabulate
 
 class configkey():
@@ -11,6 +12,7 @@ class configkey():
 		self.runningdir = os.path.split(os.path.realpath(sys.argv[0]))[0]
 		self.conn = sqlite3.connect(os.path.join(self.runningdir,'conf','SQLdb','SQL.db'))
 		print "Opened database successfully"
+		self.createtb()
 
 	def createtb(self):
 		'''
@@ -22,7 +24,7 @@ class configkey():
 		self.conn.execute(
 		'''
 		create table if not exists MonitorItem (
-		key VARCHAR[20],
+		key VARCHAR[20] primary key,
 		interval int,
 		type varchar[10],
 		command text
@@ -108,6 +110,18 @@ class configkey():
 
 		self.conn.execute("update MonitorItem set interval=" + str(newinterval) + ", type ='" + newtype + "', command = '" + newcommand + "' where key='" + vkey + "'")
 		self.conn.commit()
+
+	def sqliteEscape(self, strs):
+		strs = strs.replace("/", "//")
+		strs = strs.replace("'", "''")
+		strs = strs.replace("[", "/[")
+		strs = strs.replace("]", "/]")
+		strs = strs.replace("%", "/%")
+		strs = strs.replace("&","/&")
+		strs = strs.replace("_", "/_")
+		strs = strs.replace("(", "/(")
+		strs = strs.replace(")", "/)")
+		return strs; 
 
 if __name__ == '__main__':
 	operconfig = configkey()
