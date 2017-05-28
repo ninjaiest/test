@@ -89,9 +89,22 @@ class configkey():
 			colnamelist.append(l_values)
 
 		print tabulate(colnamelist, tablefmt="grid")
-		newinterval = raw_input("please input the new interval:")
+
+		newinterval = ''
+		while newinterval.isdigit() == False:
+			newinterval = raw_input("please input the new interval:")	
+			if newinterval.strip() == '':
+				newinterval = str(l_values[1])
+		newinterval = int(newinterval)
+
 		newtype = raw_input("please input the new type:")
+		if newtype.strip() == '':
+			newtype = l_values[2]
+
 		newcommand = raw_input("please input the new command:")
+		if newcommand.strip() == '':
+			newcommand = l_values[3]
+
 
 		self.conn.execute("update MonitorItem set interval=" + str(newinterval) + ", type ='" + newtype + "', command = '" + newcommand + "' where key='" + vkey + "'")
 		self.conn.commit()
