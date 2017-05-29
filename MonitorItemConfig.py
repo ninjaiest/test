@@ -40,7 +40,8 @@ class configkey():
 			print "\t2:add key itme"
 			print "\t3:modify the item"
 			print "\t4:delete the item"
-			print "\t5:exit program"
+			print "\t5:show detail by key"
+			print "\t6:exit program"
 			cs = raw_input("your choose is:")
 			if cs.isdigit() == True:
 				return int(cs)
@@ -107,9 +108,28 @@ class configkey():
 		if newcommand.strip() == '':
 			newcommand = l_values[3]
 
-
 		self.conn.execute("update MonitorItem set interval=" + str(newinterval) + ", type ='" + newtype + "', command = '" + newcommand + "' where key='" + vkey + "'")
 		self.conn.commit()
+
+	def showdetail(self):
+		vkey = raw_input("show the detail config by key,please input the key:")
+		cursor = self.conn.execute("SELECT * from MonitorItem where key='" + vkey +"'")
+		sqlstr = ""
+		for l in cursor.fetchall():
+			print "key","+"*50
+			print l[0]
+			print "interval","+"*50
+			print l[1]
+			print "type","+"*50
+			print l[2]
+			print "command","+"*50
+			if l[3][:7] == "infile:":
+				fp = open(os.path.join(self.runningdir,"conf","tmpsql",l[3][7:]),"r")
+				for sqlline in fp.readlines():
+					sqlstr += sqlline
+				print sqlstr
+				fp.close()
+			print "end","+"*50
 
 	def sqliteEscape(self, strs):
 		strs = strs.replace("/", "//")
@@ -127,7 +147,7 @@ if __name__ == '__main__':
 	operconfig = configkey()
 	while True:
 		cs = operconfig.selectcommand()
-		if cs == 5:
+		if cs == 6:
 			sys.exit()
 		if cs == 1:
 			operconfig.showdata()
@@ -137,5 +157,7 @@ if __name__ == '__main__':
 			operconfig.updateitembykey()
 		if cs == 4:
 			operconfig.deleteitembykey()
+		if cs == 5:
+			operconfig.showdetail()
 
 	
