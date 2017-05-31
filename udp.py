@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 import random
 import time
 import socket
 import comm.getini as getini
 import OracleMonitor.Monitor as OM
 
+runningdir = os.path.split(os.path.realpath(sys.argv[0]))[0]
 ipaddr =  getini.getini('./conf/conf.ini','GetPasswd','ipaddres','localhost')
 port = int(getini.getini('./conf/conf.ini','GetPasswd','port','3389'))
 
