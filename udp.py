@@ -36,6 +36,8 @@ dbpasswd = '#EDC2wsx1qaz189'
 dbmoni = OM.DBmonitor(dbpasswd)
 # print dbmoni.getvalues('cpu', 'key_cpu')
 # print dbmoni.test()
-tbspace = dbmoni.getvalues('tablesspace', 'tbs_user_used')
-for i in tbspace:
-	print tbspace[i]
+#tbspace = dbmoni.getvalues('tablesspace', 'tbs_user_used')
+l = dbmoni.getAllKey()
+for k in l:
+	if k[2] == 'sql':
+		dbmoni.getbysql(k)

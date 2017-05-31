@@ -1,14 +1,3 @@
-Select a.File_Name,
-       a.Bytes / 1024 / 1024 "Total(Mb)",
-       b.Sb / 1024 / 1024 "Free(Mb)",
-       100 * b.Sb / a.Bytes "FREE%",
-       a.AUTOEXTENSIBLE As aut,
-       a.MAXBYTES/1024/1024 As "maxs(Mb)"
-  From Dba_Data_Files a,
-       (Select File_Id, Sum(Bytes) Sb From Dba_Free_Space Group By File_Id) b
- Where a.File_Id = b.File_Id
- Order By a.File_Name;
---17、数据文件状态及其大小使用情况
 SELECT  a.tablespace_name "TableSpace Name", a.File_Name "File Name", 
         a.status "Status", a.AutoExtensible "Auto", 
         TO_CHAR(NVL(a.bytes / 1024 / 1024, 0),'99G999G990D900') "Size (MB)", 

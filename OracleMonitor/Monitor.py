@@ -4,11 +4,13 @@
 import sys
 import os
 import DBhelper
-sys.path.append("../")
+import sqlite3
 import comm.getini as getini
 
 class DBmonitor():
 	def __init__(self, password):
+		self.runningdir = os.path.split(os.path.realpath(sys.argv[0]))[0]
+		self.sqldir = os.path.join(self.runningdir,'conf','tmpsql')
 		self.dboper = DBhelper.DBhelp(password)
 
 	def test(self):
@@ -16,34 +18,25 @@ class DBmonitor():
 		result = self.dboper.executesql(sqlstr)
 		return result
 
-	def getvalues(self, typename, key):
-		mydict = {}
-		if typename == 'cpu':
-			mydict[key] = 90
-		if typename == 'tablesspace':
-			sqlstr = '''
-			SELECT  d.tablespace_name "Name", d.status "Status", d.contents "Type", 
-			TO_CHAR(NVL(a.bytes / 1024 / 1024, 0),'99G999G990D900') "Size (MB)", 
-			TO_CHAR(NVL(a.bytes - NVL(f.bytes, 0),0)/1024/1024, '99G999G990D900') "Used (MB)", 
-			TO_CHAR(NVL((a.bytes - NVL(f.bytes, 0)) / a.bytes * 100, 0), '990D00') "Used％" 
-			from sys.dba_tablespaces d,
-			(select tablespace_name, sum(bytes) bytes 
-			from dba_data_files group by tablespace_name) a, 
-			(select tablespace_name, sum(bytes) bytes 
-			from dba_free_space group by tablespace_name) f  
-			WHERE d.tablespace_name = a.tablespace_name(+) 
-			AND d.tablespace_name = f.tablespace_name(+) and d.tablespace_name = 'USERS'
-			'''
-			print sqlstr
-			result = self.dboper.executesql(sqlstr)
-			mydict[key] = result[0][5].strip()
-			# return result
+	def getAllKey(self):
+		keylist = []
+		conn = sqlite3.connect(os.path.join(self.runningdir,'conf','SQLdb','SQL.db'))
+		cursor = conn.execute("SELECT * from MonitorItem")
+		for keyline in cursor:
+			keylist.append(list(keyline))
+		return keylist
+
+	def getbysql(self,onekeylist):
+		sqlstr = ''
+		for line in open(os.path.join(self.sqldir,onekeylist[3][7:]),'r').readlines():
+			sqlstr += line
+		print sqlstr
 
 
-		return mydict
 
 
 
 if __name__ == '__main__':
 	dbmoni = DBmonitor('123')
-	print dbmoni.getvalues('cpu','key_cpu')
+	#print dbmoni.getvalues('cpu','key_cpu')
+	dbmoni.getAllKey()
