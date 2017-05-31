@@ -7,7 +7,7 @@ import random
 import time
 import socket
 import comm.getini as getini
-import OracleMonitor.Monitor as om
+import OracleMonitor.Monitor as omm
 
 runningdir = os.path.split(os.path.realpath(sys.argv[0]))[0]
 ipaddr = getini.getini(os.path.join(runningdir, 'conf', 'conf.ini'), 'GetPasswd', 'ipaddres', 'localhost')
@@ -35,7 +35,7 @@ s.close()
 
 dbpasswd = '#EDC2wsx1qaz189'
 
-dbmoni = om.DBmonitor(dbpasswd)
+dbmoni = omm.DBmonitor(dbpasswd)
 # print dbmoni.getvalues('cpu', 'key_cpu')
 # print dbmoni.test()
 # tbspace = dbmoni.getvalues('tablesspace', 'tbs_user_used')
