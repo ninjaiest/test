@@ -7,11 +7,11 @@ import random
 import time
 import socket
 import comm.getini as getini
-import OracleMonitor.Monitor as OM
+import OracleMonitor.Monitor as om
 
 runningdir = os.path.split(os.path.realpath(sys.argv[0]))[0]
-ipaddr =  getini.getini('./conf/conf.ini','GetPasswd','ipaddres','localhost')
-port = int(getini.getini('./conf/conf.ini','GetPasswd','port','3389'))
+ipaddr = getini.getini(os.path.join(runningdir, 'conf', 'conf.ini'), 'GetPasswd', 'ipaddres', 'localhost')
+port = int(getini.getini(os.path.join(runningdir, 'conf', 'conf.ini'), 'GetPasswd', 'port', '3389'))
 
 # use tcp mode
 '''
@@ -26,20 +26,20 @@ s.shutdown(2)
 s.close()
 '''
 
-#u use udp mode
-#s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#s.bind((ipaddr, port))
-#password, addr_tuple = s.recvfrom(1024)
-#s.sendto("recive password,program begin running!", addr_tuple)
-#s.close()
+# u use udp mode
+# s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# s.bind((ipaddr, port))
+# password, addr_tuple = s.recvfrom(1024)
+# s.sendto("recive password,program begin running!", addr_tuple)
+# s.close()
 
 dbpasswd = '#EDC2wsx1qaz189'
 
-dbmoni = OM.DBmonitor(dbpasswd)
+dbmoni = om.DBmonitor(dbpasswd)
 # print dbmoni.getvalues('cpu', 'key_cpu')
 # print dbmoni.test()
-#tbspace = dbmoni.getvalues('tablesspace', 'tbs_user_used')
+# tbspace = dbmoni.getvalues('tablesspace', 'tbs_user_used')
 l = dbmoni.getAllKey()
 for k in l:
-	if k[2] == 'sql':
-		dbmoni.getbysql(k)
+    if k[2] == 'sql':
+        dbmoni.getbysql(k)
