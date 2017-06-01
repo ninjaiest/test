@@ -18,9 +18,9 @@ class DBhelp:
         self.connstr = self.username + '/' + password + '@' + self.tnsname
         self.db = cx_Oracle.connect(self.connstr)
 
-    def executesql(self, sqlstr):
+    def executesql(self, sqlstrs):
         cursor = self.db.cursor()
-        cursor.execute(sqlstr)
+        cursor.execute(sqlstrs)
         result = cursor.fetchall()
         return result
 
