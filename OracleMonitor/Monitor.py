@@ -5,7 +5,6 @@ import sys
 import os
 import DBhelper
 import sqlite3
-import comm.getini as getini
 
 
 class DBmonitor:
