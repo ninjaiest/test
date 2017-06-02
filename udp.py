@@ -6,6 +6,8 @@ import os
 import random
 import time
 import socket
+import sqlite3
+import threading
 import comm.getini as getini
 import OracleMonitor.Monitor as Om
 
@@ -35,11 +37,26 @@ s.close()
 
 dbpasswd = '#EDC2wsx1qaz189'
 
-dbmoni = Om.DBmonitor(dbpasswd)
-# print dbmoni.getvalues('cpu', 'key_cpu')
-# print dbmoni.test()
-# tbspace = dbmoni.getvalues('tablesspace', 'tbs_user_used')
-l = dbmoni.getAllKey()
-for k in l:
-    if k[2] == 'sql':
-        dbmoni.getbysql(k)
+con = sqlite3.connect(":memory:", check_same_thread=False)
+cur = con.cursor()
+cur.executescript("""
+create table keyvalues(
+key varchar(20),
+lastrungtime float,
+keyvalues text,
+isupdate int,
+isSend int)""")
+cur.close()
+
+dbmoni = Om.DBmonitor(dbpasswd, con)
+while True:
+    l = dbmoni.getItemRun()
+    cur = con.cursor()
+    cur.execute('select * from keyvalues where isupdate=1 and isSend<>1')
+    lists = cur.fetchall()
+
+    if len(lists) > 0:
+        print lists
+
+    cur.execute("update keyvalues set isSend=1 where isupdate=1")
+    cur.close()
