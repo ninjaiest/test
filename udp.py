@@ -60,3 +60,4 @@ while True:
 
     cur.execute("update keyvalues set isSend=1 where isupdate=1")
     cur.close()
+    time.sleep(5)

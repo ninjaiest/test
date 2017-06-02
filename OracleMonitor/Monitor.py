@@ -71,6 +71,7 @@ class DBmonitor:
         cur.execute("insert into keyvalues(key,lastrungtime,keyvalues,isupdate,isSend) values('" + skeylist[0] + "'," +
                     str(skeylist[4]) + ",'" + skeylist[5] + "'," + str(skeylist[6]) + "," + str(skeylist[7]) + ")")
         # print cur.fetchall()
+        cur.close()
 
     def getItemRun(self):
         if self.isfirst == 0:
@@ -86,9 +87,8 @@ class DBmonitor:
                 # lock.acquire()
                 t = threading.Thread(target=self.getItemValuebytread, args=(skey,))
                 t.start()
-                t.join()
-                # lock.release()
                 # t.join()
+                # lock.release()
 
     def getItemValuefirst(self):
         global keylist
@@ -97,9 +97,8 @@ class DBmonitor:
             # lock.acquire()
             t = threading.Thread(target=self.getItemValuebytread, args=(skey,))
             t.start()
-            t.join()
-            # lock.release()
             # t.join()
+            # lock.release()
         self.isfirst = 0
 
     def getdatefromsqlite(self):
