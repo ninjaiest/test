@@ -16,12 +16,14 @@ class DBhelp:
         self.username = getini.getini(self.configfile, 'DB', 'oracleuser', 'dba').replace('\n', '')
         self.tnsname = getini.getini(self.configfile, 'DB', 'tnsname', 'orcl').replace('\n', '')
         self.connstr = self.username + '/' + password + '@' + self.tnsname
-        self.db = cx_Oracle.connect(self.connstr)
+        self.db = None
 
     def executesql(self, sqlstrs):
+        self.db= cx_Oracle.connect(self.connstr)
         cursor = self.db.cursor()
         cursor.execute(sqlstrs)
         result = cursor.fetchall()
+        self.db.close()
         return result
 
 

@@ -3,11 +3,10 @@
 
 import sys
 import os
-import random
 import time
 import socket
 import sqlite3
-import threading
+import Queue
 import comm.getini as getini
 import OracleMonitor.Monitor as Om
 
@@ -35,7 +34,7 @@ s.close()
 # s.sendto("recive password,program begin running!", addr_tuple)
 # s.close()
 
-dbpasswd = '#EDC2wsx1qaz189'
+dbpasswd = 'lovegood'
 
 con = sqlite3.connect(":memory:", check_same_thread=False)
 cur = con.cursor()
@@ -49,15 +48,16 @@ isSend int)""")
 cur.close()
 
 dbmoni = Om.DBmonitor(dbpasswd, con)
+qs = Queue.Queue()
 while True:
-    l = dbmoni.getItemRun()
+    dbmoni.getItemRun()
     cur = con.cursor()
-    cur.execute('select * from keyvalues where isupdate=1 and isSend<>1')
+    cur.execute('select * from keyvalues where isupdate=1 and isSend=0')
     lists = cur.fetchall()
-
+    # time.sleep(1)
     if len(lists) > 0:
         print lists
 
     cur.execute("update keyvalues set isSend=1 where isupdate=1")
     cur.close()
-    time.sleep(5)
+    time.sleep(3)
