@@ -112,13 +112,13 @@ class DBmonitor:
         if skey[2] == 'sql':
             if skey[3][:7] == 'infile:':
                 skey[5] = self.dboper.executesql(self.GetSqlbyFile(skey))[0][0]
-                skey[4] = time.time()
+                # skey[4] = time.time()
                 skey[6] = 1
                 skey[7] = 0
                 self.opersqlite(skey)
         if skey[2] == 'command':
             skey[5] = '123213213213213'
-            skey[4] = time.time()
+            # skey[4] = time.time()
             skey[6] = 1
             skey[7] = 0
             self.opersqlite(skey)

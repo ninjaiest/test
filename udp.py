@@ -3,12 +3,11 @@
 
 import sys
 import os
-import time
 import socket
 import sqlite3
-import Queue
 import comm.getini as getini
 import OracleMonitor.Monitor as Om
+import zabbixsender.AssemblyData as Za
 
 runningdir = os.path.split(os.path.realpath(sys.argv[0]))[0]
 ipaddr = getini.getini(os.path.join(runningdir, 'conf', 'conf.ini'), 'GetPasswd', 'ipaddres', 'localhost')
@@ -47,17 +46,10 @@ isupdate int,
 isSend int)""")
 cur.close()
 
+zasender = Za.assembly(con)
+
 dbmoni = Om.DBmonitor(dbpasswd, con)
-qs = Queue.Queue()
 while True:
     dbmoni.getItemRun()
-    cur = con.cursor()
-    cur.execute('select * from keyvalues where isupdate=1 and isSend=0')
-    lists = cur.fetchall()
-    # time.sleep(1)
-    if len(lists) > 0:
-        print lists
+    zasender.assemblybykey()
 
-    cur.execute("update keyvalues set isSend=1 where isupdate=1")
-    cur.close()
-    time.sleep(3)

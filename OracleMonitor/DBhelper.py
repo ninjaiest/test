@@ -4,6 +4,7 @@
 import cx_Oracle
 import sys
 import os
+import time
 
 sys.path.append("../")
 import comm.getini as getini
@@ -19,11 +20,14 @@ class DBhelp:
         self.db = None
 
     def executesql(self, sqlstrs):
-        self.db= cx_Oracle.connect(self.connstr)
+        # starttime = time.time()
+        self.db = cx_Oracle.connect(self.connstr)
         cursor = self.db.cursor()
         cursor.execute(sqlstrs)
         result = cursor.fetchall()
         self.db.close()
+        # endtime = time.time()
+        # print starttime, endtime - starttime
         return result
 
 
